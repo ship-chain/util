@@ -40,7 +40,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            return context.payload.ref.replace(/refs\/tags\//, '');
+            const core = require('@actions/core');
+
+            return core.setOutput('tag', 1);
 
       - name: aaaa
         id: aaa
@@ -61,7 +63,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package.json
-          asset_name: "Europa-${{ steps.tag.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}"
-          tag: "${{ steps.tag.outputs.result }}"
+          asset_name: Europa-${{ steps.tag.outputs.tag }}-${{ matrix.platform }}.${{ matrix.appType }}
+          tag: "${{ steps.tag.outputs.tag }}"
           body: "release"
           prerelease: true

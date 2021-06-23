@@ -1,0 +1,53 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifactName: "^europa.*ubuntu$"
+            targetName: "europa"
+            platform: "x86_64-linux"
+            appType: "AppImage" 
+
+          - os: windows-latest
+            artifactName: "^europa.*win\\.exe$"
+            targetName: "europa.exe"
+            platform: "x86_64-win"
+            appType: "exe" 
+
+          # - os: macos-latest
+          #   artifactName: "^europa.*darwin$"
+          #   targetName: "europa"
+          #   platform: "x86_64-darwin"
+          #   appType: "dmg" 
+
+    steps:
+      - name: Extract tag name
+        id: tag
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\//, '');
+
+      - name: aaaa
+        id: aaa
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref;
+
+      - name: bbb
+        run: echo ${{ steps.tag.outputs.result }}

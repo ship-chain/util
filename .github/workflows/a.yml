@@ -14,11 +14,11 @@ jobs:
     strategy:
       matrix:
         include:
-          # - os: ubuntu-latest
-          #   artifactName: "^europa.*ubuntu$"
-          #   targetName: "europa"
-          #   platform: "x86_64-linux"
-          #   appType: "AppImage" 
+          - os: ubuntu-latest
+            artifactName: "^europa.*ubuntu$"
+            targetName: "europa"
+            platform: "x86_64-linux"
+            appType: "AppImage" 
 
           - os: windows-latest
             artifactName: "^europa.*win\\.exe$"
@@ -26,11 +26,11 @@ jobs:
             platform: "x86_64-win"
             appType: "exe" 
 
-          # - os: macos-latest
-          #   artifactName: "^europa.*darwin$"
-          #   targetName: "europa"
-          #   platform: "x86_64-darwin"
-          #   appType: "dmg" 
+          - os: macos-latest
+            artifactName: "^europa.*darwin$"
+            targetName: "europa"
+            platform: "x86_64-darwin"
+            appType: "dmg" 
 
     steps:
       - uses: actions/checkout@v2
@@ -43,11 +43,29 @@ jobs:
       #       return context.payload.ref.replace(/refs\/tags\//, '');
 
       - name: Get the version
-        id: get_version
+        if: startsWith(matrix.os, 'win')
+        id: get_version_win
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
         shell: bash
 
+      - name: Get the version
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Upload applications to release
+        if: startsWith(matrix.os, 'win')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: package.json
+          asset_name: Europa-${{ steps.get_version_win.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
+          tag: ${{ steps.get_version_win.outputs.VERSION }}
+          body: "release"
+          prerelease: true
+
+      - name: Upload applications to release
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}

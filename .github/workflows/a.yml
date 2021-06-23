@@ -26,11 +26,11 @@ jobs:
             platform: "x86_64-win"
             appType: "exe" 
 
-          # - os: macos-latest
-          #   artifactName: "^europa.*darwin$"
-          #   targetName: "europa"
-          #   platform: "x86_64-darwin"
-          #   appType: "dmg" 
+          - os: macos-latest
+            artifactName: "^europa.*darwin$"
+            targetName: "europa"
+            platform: "x86_64-darwin"
+            appType: "dmg" 
 
     steps:
       - uses: actions/checkout@v2
@@ -45,20 +45,7 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-      - name: aaaa
-        id: aaa
-        uses: actions/github-script@0.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            return context.payload.ref;
-
-      - name: bbb
-        run: echo ${{ steps.get_version.outputs.VERSION }}
-
-      - name: ccc
-        run: echo ${{ steps.aaa.outputs.result }}
+        shell: bash
 
       - name: Upload applications to release
         uses: svenstaro/upload-release-action@v2

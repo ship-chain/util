@@ -3,7 +3,7 @@ import { httpGet } from '../http';
 interface SignParms {
 
   // Resource origin domain
-   origin: string;
+   origin: string; 
 
   meta: {
     // A key that holds the resource

@@ -28,9 +28,10 @@ jobs:
             artifactName: "^europa.*darwin$"
             targetName: "europa"
             platform: "x86_64-darwin"
-            appType: "dmg" 
+            appType: "dmg"
 
     steps:
+      - uses: actions/checkout@v2
       - name: Download release artifact
         id: download_release_asset
         uses: i3h/download-release-asset@v1
@@ -52,7 +53,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
         run: ls -al ./
 
-      # - uses: actions/checkout@v2
 
       # - name: Get the version
       #   if: startsWith(matrix.os, 'win')

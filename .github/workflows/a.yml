@@ -33,6 +33,7 @@ jobs:
           #   appType: "dmg" 
 
     steps:
+      - uses: actions/checkout@v2
       - name: Extract tag name
         id: tag
         uses: actions/github-script@0.2.0
@@ -60,7 +61,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package.json
-          asset_name: Europa-${{ steps.tag.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: ${{ steps.tag.outputs.result }}
+          asset_name: "Europa-${{ steps.tag.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}"
+          tag: "${{ steps.tag.outputs.result }}"
           body: "release"
           prerelease: true

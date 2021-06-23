@@ -31,44 +31,58 @@ jobs:
             appType: "dmg" 
 
     steps:
-      - uses: actions/checkout@v2
-      # - name: Extract tag name
-      #   id: tag
-      #   uses: actions/github-script@0.2.0
+      - name: Download release artifact
+        id: download_release_asset
+        uses: i3h/download-release-asset@v1
+        with:
+          owner: atenjin
+          repo: europa
+          tag: v0.3.20
+          file: ${{ matrix.artifactName }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename & mv artifact
+        run: yarn run rename
+
+      - name: Executable artifact
+        run: chmod +X europa
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
+
+      - name: echo
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
+        run: ls -al ./
+
+      # - uses: actions/checkout@v2
+
+      # - name: Get the version
+      #   if: startsWith(matrix.os, 'win')
+      #   id: get_version_win
+      #   run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      #   shell: bash
+
+      # - name: Get the version
+      #   if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
+      #   id: get_version
+      #   run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      # - name: Upload applications to release
+      #   if: startsWith(matrix.os, 'win')
+      #   uses: svenstaro/upload-release-action@v2
       #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       return context.payload.ref.replace(/refs\/tags\//, '');
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: package.json
+      #     asset_name: Europa-${{ steps.get_version_win.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
+      #     tag: ${{ steps.get_version_win.outputs.VERSION }}
+      #     body: "release"
+      #     prerelease: true
 
-      - name: Get the version
-        if: startsWith(matrix.os, 'win')
-        id: get_version_win
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-
-      - name: Get the version
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
-      - name: Upload applications to release
-        if: startsWith(matrix.os, 'win')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: package.json
-          asset_name: Europa-${{ steps.get_version_win.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: ${{ steps.get_version_win.outputs.VERSION }}
-          body: "release"
-          prerelease: true
-
-      - name: Upload applications to release
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: package.json
-          asset_name: Europa-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: ${{ steps.get_version.outputs.VERSION }}
-          body: "release"
-          prerelease: true
+      # - name: Upload applications to release
+      #   if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: package.json
+      #     asset_name: Europa-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
+      #     tag: ${{ steps.get_version.outputs.VERSION }}
+      #     body: "release"
+      #     prerelease: true

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "rename": "node ./.github/workflows/rename",
     "start": "ts-node -r tsconfig-paths/register src/index.ts"
   },
   "repository": {

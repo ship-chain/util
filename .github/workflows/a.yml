@@ -51,3 +51,6 @@ jobs:
 
       - name: bbb
         run: echo ${{ steps.tag.outputs.result }}
+
+      - name: ccc
+        run: echo ${{ steps.aaa.outputs.result }}

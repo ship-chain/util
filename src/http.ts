@@ -53,7 +53,7 @@ service.interceptors.response.use(
       type: APIErrorType.original,
       err,
       msg: '请求失败',
-    };
+    };return
     return Promise.reject(apiError);
   },
 )

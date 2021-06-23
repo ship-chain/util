@@ -46,7 +46,7 @@ jobs:
         run: yarn run rename
 
       - name: Executable artifact
-        run: chmod +X europa
+        run: chmod +x europa
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'mac')
 
       - name: echo

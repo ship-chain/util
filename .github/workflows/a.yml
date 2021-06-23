@@ -61,7 +61,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package.json
-          asset_name: Europa-${{ steps.aaa.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: ${{ steps.aaa.outputs.result }}
+          asset_name: 'Europa-${{ steps.tag.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}'
+          tag: '${{ steps.tag.outputs.result }}'
           body: "release"
           prerelease: true

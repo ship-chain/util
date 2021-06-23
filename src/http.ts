@@ -51,7 +51,7 @@ service.interceptors.response.use(
     console.log('响应错误拦截：', err)
     const apiError = {
       type: APIErrorType.original,
-      err,
+      err, 
       msg: '请求失败',
     };return
     return Promise.reject(apiError);

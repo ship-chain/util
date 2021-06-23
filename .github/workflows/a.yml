@@ -55,19 +55,17 @@ jobs:
             return context.payload.ref;
 
       - name: bbb
-        run: echo ${{ steps.get_version.outputs.result }}
+        run: echo ${{ steps.get_version.outputs.VERSION }}
 
       - name: ccc
         run: echo ${{ steps.aaa.outputs.result }}
 
       - name: Upload applications to release
         uses: svenstaro/upload-release-action@v2
-        env:
-          TAG: ${{ steps.get_version.outputs.result }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package.json
-          asset_name: Europa-${{ steps.get_version.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: ${{ steps.get_version.outputs.result }}
+          asset_name: Europa-${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}.${{ matrix.appType }}
+          tag: ${{ steps.get_version.outputs.VERSION }}
           body: "release"
           prerelease: true

@@ -34,13 +34,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Extract tag name
-        id: tag
-        uses: actions/github-script@0.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            return context.payload.ref.replace(/refs\/tags\//, '');
+      # - name: Extract tag name
+      #   id: tag
+      #   uses: actions/github-script@0.2.0
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     script: |
+      #       return context.payload.ref.replace(/refs\/tags\//, '');
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
       - name: aaaa
         id: aaa
@@ -48,10 +52,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            return 1;
+            return context.payload.ref;
 
       - name: bbb
-        run: echo ${{ steps.tag.outputs.result }}
+        run: echo ${{ steps.get_version.outputs.result }}
 
       - name: ccc
         run: echo ${{ steps.aaa.outputs.result }}
@@ -59,11 +63,11 @@ jobs:
       - name: Upload applications to release
         uses: svenstaro/upload-release-action@v2
         env:
-          TAG: ${{ steps.tag.outputs.result }}
+          TAG: ${{ steps.get_version.outputs.result }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: package.json
-          asset_name: Europa-$TAG-${{ matrix.platform }}.${{ matrix.appType }}
-          tag: $TAG
+          asset_name: Europa-${{ steps.get_version.outputs.result }}-${{ matrix.platform }}.${{ matrix.appType }}
+          tag: ${{ steps.get_version.outputs.result }}
           body: "release"
           prerelease: true
